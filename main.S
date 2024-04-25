@@ -1,10 +1,12 @@
+.include "io.S"
 .include "syscalls.S"
 .data
     listen_msg: .asciz "Server listen.\n"
-    line_feed: .asciz "\n"
-
+    dbg: .asciz "Debug msg! "
+.equ        AF_INET, 2
+.equ        PORT, 3001
 .text 
-.globl _start
+.globl      _start
 exit:
     mov     $SYS_exit, %rax
     mov     $0, %rdi
@@ -12,81 +14,52 @@ exit:
 
 sock:
     mov     $SYS_socket, %rax
-    mov     $2, %rdi 
+    mov     $AF_INET, %rdi # AF_INET
     mov     $1, %rsi
     mov     $0,%rdx
     syscall
     ret
+bind:
+#sizeof(sockaddr_in) = 16 
+#   sa_family_t 2
+#   in_port_t   2
+#   in_addr     4 
 
-str_len:
-    mov     %rcx, %r13
-    xor     %rcx, %rcx
-    str_len_loop:
-        cmpb    $0, (%rsi, %rcx)
-        je      str_len_end
-        inc     %rcx
-        jmp     str_len_loop
-    str_len_end:
-        mov     %rcx, %rdx
-        mov     %r13, %rcx
-        xor     %r13, %r13
-        ret
+    push     %rbp
+    mov      %rsp, %rbp
+    sub      $8, %rsp
 
-print:
-    mov $SYS_write, %rax
-    mov $1, %rdi
-    call str_len
+    call     print_number
+
+    mov      $SYS_bind,   %rax
+    movw     $AF_INET,   (%rsp)
+    movw     $3001, 2(%rsp)
+    movl     $0, 4(%rsp)
+    lea      (%rsp), %rsi
+    mov      $8, %rdx
     syscall
-    ret
-
-print_ln:
-
-    call print
-    mov %rsi, %r14
-    xor %rsi, %rsi
-    mov $line_feed, %rsi
-    call print
-    mov %r14, %rsi
-    xor %r14, %r14
+    add      $8, %rsp
+    pop      %rbp
     ret
 
 
-print_number:# (2 ^ 32) - 1
-#               4294967295
-    
+_start:
     push    %rbp
     mov     %rsp, %rbp
-    mov     %rdi, %rax
-    mov     %rbp, %rcx
-    sub     $20, %rsp
-    sub     $8, %rcx
-    # sub $20,%rsp # 8 bit inicio 12 data
-    print_loop:
-        xor     %edx, %edx
-        mov     $10, %ebx
-        div     %ebx # rax/ebx
-        mov     %rdx, %rdi
-        addb    $48 ,%dil        
-        movb    %dil, (%rcx)
-        dec     %rcx
+    sub     $0x20, %rsp
+    call    sock # return value/eax/fd of socket
+    movl    %eax, (%rbp)
+    mov     %rax, %rdi
+    call    print_number
+    mov     %rax, %rdi
 
-        cmp     $0, %rax
-        jne     print_loop
-        je      print_final
-
-    print_final:
-        inc     %rcx
-        lea     (%rcx), %rsi
-        call    print_ln
-        add     $20, %rsp
-        pop     %rbp
-        ret    
-
-    
-_start:
-
-    mov     $1333, %rdi
+    call    bind
+    mov     %rax, %rdi
     call    print_number
     
-    
+    mov     $listen_msg, %rsi
+    call    print_ln
+
+    add     $0x20, %rsp
+    pop     %rbp
     jmp     exit
