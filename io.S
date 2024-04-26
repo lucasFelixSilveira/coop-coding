@@ -1,5 +1,6 @@
 .data    
     line_feed: .asciz "\n"
+
 .text
 str_len:
     mov     %rcx, %r13
@@ -35,11 +36,11 @@ print_ln:
     xor     %r14, %r14
     ret
 
-
 print_number:# (2 ^ 32) - 1
 #               4294967295
     
     push    %rbp
+    mov     %rax, %r9
     mov     %rsp, %rbp
     mov     %rdi, %r13
     mov     %rdi, %rax
