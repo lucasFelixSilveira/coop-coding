@@ -164,7 +164,7 @@ _start:
   jb    print_err
 
 
-  mov   -8(%rbp),              %rdi#out_fd, FD of the new socket
+  mov   -8(%rbp),        %rdi#out_fd, FD of the new socket
   mov   -16(%rbp),       %rsi#in_fd, FD 0f the file
   mov   $0,              %rdx
   mov   -24(%rbp),       %r10#size of the buffer
