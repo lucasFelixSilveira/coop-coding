@@ -1,5 +1,5 @@
 .include "io.S"
-.include "syscallsS"
+.include "syscalls.S"
 .data
   .equ  SEEK_END,  2
   .equ  AF_INET,   2
