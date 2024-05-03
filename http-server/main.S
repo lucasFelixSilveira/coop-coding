@@ -11,7 +11,7 @@
   bind_msg:   .asciz "Socket bound.\n"
   listen_msg: .asciz "Server listen.\n"
   dbg:    .asciz "Debug msg! "
-  path:     .asciz "/home/<>/Documents/GIT/asm_sockets/a.html",
+  path:     .asciz "response.html",
   buffer: .fill 128, 1
   address:
   .short AF_INET
