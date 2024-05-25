@@ -4,7 +4,7 @@
 .text
 str_len:
     mov     %rcx, %r13
-	   xor     %rcx, %rcx
+    xor     %rcx, %rcx
     str_len_loop:
         cmpb    $0, (%rsi, %rcx)
         je      str_len_end
