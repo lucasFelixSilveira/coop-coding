@@ -4,7 +4,7 @@
 .text
 str_len:
     mov     %rcx, %r13
-	xor     %rcx, %rcx
+	   xor     %rcx, %rcx
     str_len_loop:
         cmpb    $0, (%rsi, %rcx)
         je      str_len_end
@@ -19,7 +19,7 @@ str_len:
 print:
     mov     %rdi, %r8
     mov     $SYS_write, %rax
-	mov     $1, %rdi
+    mov     $1, %rdi
     call    str_len
     syscall
     mov     %r8, %rdi
