@@ -2,69 +2,12 @@ HTTP/1.1 200 OK
 Content-Type: text/html 
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Servidor HTTP com Assembly AT&T</title>
-    <style>
-      code {
-        padding: 10px;
-        background: #1d1d1d33;
-        border: #666;
-      }
-    </style>
 </head>
 <body>
     <h1>Servidor HTTP com Assembly AT&T</h1>
     <p>Neste exemplo, vamos criar um servidor HTTP simples usando assembly AT&T.</p>
-    
-    <h2>Código Assembly AT&T:</h2>
-    <pre>
-        <code>
-          .include "io.s"
-          .include "syscalls.s"
-          .data
-            .equ  SEEK_END,  2
-            .equ  AF_INET,   2
-            .equ  PORT,    47627
-            .equ  SOL_SOCKET,  1
-            .equ  SO_REUSEADDR,  2
-            .equ  SO_REUSEPORT,  15
-          
-            bind_msg:   .asciz "Socket bound.\n"
-            listen_msg: .asciz "Server listen.\n"
-            dbg:    .asciz "Debug msg! "
-            path:     .asciz "/home/bandeira/Documents/GIT/asm_sockets/a.html",
-            buffer: .fill 128, 1
-            address:
-            .short AF_INET
-            .short PORT
-            .int 0
-            .fill 0,8,0
-          
-          .bss
-          file_desc: .space 4
-          
-          .text 
-          .globl  _start
-          exit:
-            mov   $SYS_exit, %rax
-            mov   $0, %rdi
-            syscall
-          
-          sock:
-            mov   $SYS_socket, %rax
-            mov   $AF_INET, %rdi # AF_INET
-            mov   $1, %rsi
-            mov   $0, %rdx
-            syscall
-            ret
-          
-                ...
-        </code>
-    </pre>
-
-    <p>Este é apenas um exemplo simples e educacional para ilustrar como um servidor HTTP pode ser implementado em assembly AT&T. Para um servidor real, recomenda-se o uso de linguagens de programação de nível mais alto e bibliotecas especializadas.</p>
 </body>
 </html>
